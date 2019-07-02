@@ -1,0 +1,62 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-4.0.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.0.xsd
+	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-4.0.xsd 
+	http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-4.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.0.xsd">
+
+	<!-- 开启包扫描 -->
+	<context:component-scan base-package="com.bysj"></context:component-scan>
+	<!-- spring加载配置文件properties -->
+	<!-- <context:property-placeholder location="classpath:/properties/*.properties"/> -->
+	<bean
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>classpath:/properties/jdbc.properties</value>
+				<value>classpath:/properties/redis.properties</value>
+				<value>classpath:/properties/httpclient.properties</value>
+			</list>
+		</property>
+	</bean>
+	<!-- 管理数据源 -->
+	<bean id="dataSource"
+		class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="driverClassName" value="${jdbc.driver}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean>
+	<!-- 配置spring事务策略 注解形式配置简单，但使用时需要给每一个都加注解 配置文件形式正好相反 -->
+	<!-- 配置事务管理器 -->
+	<bean id="transactionManager"
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<!-- 定义事务管理策略 REQUIRED必须添加事务 NEVER从不添加事务 SUPPORTS其他bean掉用这个有事务就有没有就没有 REQUIRES_NEW每次添加新事务 -->
+	<tx:advice id="txAdvice"
+		transaction-manager="transactionManager">
+		<tx:attributes>
+			<tx:method name="save*" propagation="REQUIRED" />
+			<tx:method name="delete*" propagation="REQUIRED" />
+			<tx:method name="updata*" propagation="REQUIRED" />
+			<tx:method name="find*" propagation="SUPPORTS"
+				read-only="true" />
+			<tx:method name="*" propagation="SUPPORTS" read-only="true" />
+		</tx:attributes>
+	</tx:advice>
+	<!-- 配置事务切面 -->
+	<aop:config> 
+		<aop:pointcut
+			expression="execution(* com.bysj.manage.service..*.*(..))" id="pc" />
+		<aop:advisor advice-ref="txAdvice" pointcut-ref="pc"/>
+	</aop:config>
+	<!-- 强制使用cglib代理 -->
+	<!-- <aop:scoped-proxy proxy-target-class="true"/> -->
+</beans>

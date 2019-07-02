@@ -1,0 +1,45 @@
+
+	<!-- 配置哨兵 -->
+	<bean id="sentinelPool" class="redis.clients.jedis.JedisSentinelPool">
+		<constructor-arg name="masterName" value="mymaster"></constructor-arg>
+		<constructor-arg name="sentinels">
+			<set>
+			   <value>192.168.37.134:26379</value>
+			</set>
+		</constructor-arg>
+	</bean>
+
+
+	<!-- spring实现分片配置 -->
+	<bean id="poolConfig" class="redis.clients.jedis.JedisPoolConfig">
+		<property name="maxTotal" value="1000"></property>
+	</bean>
+
+	<bean id="info1" class="redis.clients.jedis.JedisShardInfo">
+		<constructor-arg name="host" value="192.168.37.134"></constructor-arg>
+		<constructor-arg name="port" value="6379"></constructor-arg>
+	</bean>
+	<bean id="info2" class="redis.clients.jedis.JedisShardInfo">
+		<constructor-arg name="host" value="192.168.37.134"></constructor-arg>
+		<constructor-arg name="port" value="6380"></constructor-arg>
+	</bean>
+	<bean id="info3" class="redis.clients.jedis.JedisShardInfo">
+		<constructor-arg name="host" value="192.168.37.134"></constructor-arg>
+		<constructor-arg name="port" value="6381"></constructor-arg>
+	</bean>
+
+	<bean id="jedisPool" class="redis.clients.jedis.ShardedJedisPool">
+		<constructor-arg name="poolConfig" ref="poolConfig"></constructor-arg>
+		<constructor-arg name="shards">
+			<list>
+				<ref bean="info1" />
+				<ref bean="info2" />
+				<ref bean="info3" />
+			</list>
+		</constructor-arg>
+	</bean>
+
+	<bean id="jdis" class="redis.clients.jedis.Jedis">
+		<constructor-arg name="host" value="${redis.host}"></constructor-arg>
+		<constructor-arg name="port" value="${redis.port}"></constructor-arg>
+	</bean>

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bysj.sso.mapper.UserMapper">
+	<!-- 关于#号和$的区别 select * from user where username = "?" and password = ?" 
+		#号: 1.使用#号传参有预编译的效果. 防止sql注入攻击 2.为参数添加一对""号 约定:能用#号不用$ $符: 只有以字段的名称为参数时,才使用$符 
+		例子: select -->
+
+</mapper>

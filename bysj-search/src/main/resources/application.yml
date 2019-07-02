@@ -1,0 +1,22 @@
+server:
+  port: 9999
+  
+spring:
+    datasource:
+        type: com.alibaba.druid.pool.DruidDataSource
+        driver-class-name: com.mysql.jdbc.Driver
+        url: jdbc:mysql://127.0.0.1:3306/bsdb
+        username: root
+        password: 6
+    mvc:
+      view:
+        prefix: /html/
+        suffix: .html
+        
+mybatis:
+  typeAliasesPackage: com.heida.bysjsearch.pojo
+  mappers: mappers/*.xml
+
+logging:
+  level: 
+    com.sp.mapper: debug

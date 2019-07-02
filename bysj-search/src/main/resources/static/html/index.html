@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>视频主页</title>
+</head>
+<body>
+	<div id="app">
+		<td align="center">视频网站后台管理</td>
+		<td ><button v-on:click="addVideo()">添加视频</button></td>
+		<table border="1px" cellspacing="0" bgcolor="" bordercolor="red"
+			cellpadding="10px" width="70%" align="center">
+			<thead>
+				<tr>
+					<th>图片</th>
+					<th>视频名称</th>
+					<th>视频类型</th>
+					<th>预览视频</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr v-for="site in sites">
+					<td><img alt="" width="150px;" height="150px;" v-bind:src="'../imgs/'+site.videoUrl"></td>
+					<td v-text="site.videoName"></td>
+					<td v-text="site.typeName"></td>
+					<td>
+						<button v-on:click="currVideo(site.videoHtml)">预览视频</button>
+						<button v-on:click="delVideo(site.id)">删除视频</button>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</div>
+</body>
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+<script src="../js/index.js"></script>
+<script type="text/javascript">
+	
+</script>
+</html>
